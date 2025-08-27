@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { Database } from '@/lib/supabase/types'
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,7 +37,8 @@ export async function GET(request: NextRequest) {
         .from('sound_tags')
         .select('name, usage_count')
         .order('usage_count', { ascending: false })
-        .limit(10),
+        .limit(10)
+        .returns<Pick<Database['public']['Tables']['sound_tags']['Row'], 'name' | 'usage_count'>[]>(),
       
       // 精选音频
       supabase
@@ -45,7 +47,8 @@ export async function GET(request: NextRequest) {
         .eq('is_featured', true)
         .eq('is_active', true)
         .order('play_count', { ascending: false })
-        .limit(5),
+        .limit(5)
+        .returns<any[]>(),
       
       // 最受欢迎音频
       supabase
@@ -54,6 +57,7 @@ export async function GET(request: NextRequest) {
         .eq('is_active', true)
         .order('play_count', { ascending: false })
         .limit(10)
+        .returns<any[]>()
     ])
 
     // 计算过去7天的统计
@@ -75,6 +79,7 @@ export async function GET(request: NextRequest) {
       `)
       .eq('is_active', true)
       .eq('sound_audio_items.is_active', true)
+      .returns<any[]>()
 
     return NextResponse.json({
       overview: {

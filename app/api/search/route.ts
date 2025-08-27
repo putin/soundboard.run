@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { Database } from '@/lib/supabase/types'
 
 export async function GET(request: NextRequest) {
   try {
@@ -29,6 +30,7 @@ export async function GET(request: NextRequest) {
       .eq('is_active', true)
       .order('play_count', { ascending: false })
       .range(offset, offset + limit - 1)
+      .returns<Database['public']['Tables']['sound_audio_items']['Row'][]>()
 
     if (error) {
       console.error('Error searching audio items:', error)
@@ -54,6 +56,7 @@ export async function GET(request: NextRequest) {
       const { data: rawFallbackResults, error: fallbackError } = await fallbackQuery
         .order('play_count', { ascending: false })
         .range(offset, offset + limit - 1)
+        .returns<Database['public']['Tables']['sound_audio_items']['Row'][]>()
 
       if (fallbackError) {
         return NextResponse.json(
@@ -67,6 +70,7 @@ export async function GET(request: NextRequest) {
         .from('sound_categories')
         .select('id, name, description, color')
         .eq('is_active', true)
+        .returns<Pick<Database['public']['Tables']['sound_categories']['Row'], 'id' | 'name' | 'description' | 'color'>[]>()
 
       const categoryMap = new Map()
       categories?.forEach(cat => categoryMap.set(cat.id, cat))
@@ -97,6 +101,7 @@ export async function GET(request: NextRequest) {
       .from('sound_categories')
       .select('id, name, description, color')
       .eq('is_active', true)
+      .returns<Pick<Database['public']['Tables']['sound_categories']['Row'], 'id' | 'name' | 'description' | 'color'>[]>()
 
     const categoryMap = new Map()
     categories?.forEach(cat => categoryMap.set(cat.id, cat))
@@ -120,6 +125,7 @@ export async function GET(request: NextRequest) {
       .ilike('name', `%${query}%`)
       .order('usage_count', { ascending: false })
       .limit(5)
+      .returns<Pick<Database['public']['Tables']['sound_tags']['Row'], 'name'>[]>()
 
     return NextResponse.json({
       results: audioItems,

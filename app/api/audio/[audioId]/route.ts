@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { Database } from '@/lib/supabase/types'
 
 export async function GET(
   request: NextRequest,
@@ -14,7 +15,7 @@ export async function GET(
       .select('*')
       .eq('id', audioId)
       .eq('is_active', true)
-      .single()
+      .single<Database['public']['Tables']['sound_audio_items']['Row']>()
 
     if (error || !rawAudioItem) {
       return NextResponse.json(
@@ -29,7 +30,7 @@ export async function GET(
       .select('id, name, description, color')
       .eq('id', rawAudioItem.category_id)
       .eq('is_active', true)
-      .single()
+      .single<Pick<Database['public']['Tables']['sound_categories']['Row'], 'id' | 'name' | 'description' | 'color'>>()
 
     // 合并数据 (即使分类查询失败也返回音频数据)
     const audioItem = {
@@ -81,7 +82,7 @@ export async function POST(
     }
 
     // 使用 RPC 函数增加计数器 (需要在数据库中创建)
-    const { data, error } = await supabase.rpc('increment_counter', {
+    const { data, error } = await (supabase.rpc as any)('increment_counter', {
       table_name: 'sound_audio_items',
       row_id: audioId,
       column_name: updateField
@@ -102,7 +103,7 @@ export async function POST(
                  request.headers.get('x-real-ip') || 
                  '127.0.0.1'
 
-      await supabase
+      await (supabase as any)
         .from('sound_play_history')
         .insert({
           audio_id: audioId,

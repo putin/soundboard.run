@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { Database } from '@/lib/supabase/types'
 
 export async function GET(request: NextRequest) {
   try {
@@ -61,7 +62,7 @@ export async function GET(request: NextRequest) {
     // 分页
     query = query.range(offset, offset + limit - 1)
 
-    const { data: rawAudioItems, error, count } = await query
+    const { data: rawAudioItems, error, count } = await query.returns<Database['public']['Tables']['sound_audio_items']['Row'][]>()
 
     if (error) {
       console.error('Error fetching audio items:', error)
@@ -76,6 +77,7 @@ export async function GET(request: NextRequest) {
       .from('sound_categories')
       .select('id, name, description, color')
       .eq('is_active', true)
+      .returns<Pick<Database['public']['Tables']['sound_categories']['Row'], 'id' | 'name' | 'description' | 'color'>[]>()
 
     if (categoriesError) {
       console.error('Error fetching categories:', categoriesError)

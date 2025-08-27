@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { Database } from '@/lib/supabase/types'
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
       .eq('is_active', true)
       .order('sort_order', { ascending: true })
 
-    const { data: categories, error } = await query
+    const { data: categories, error } = await query.returns<Database['public']['Tables']['sound_categories']['Row'][]>()
 
     if (error) {
       console.error('Error fetching categories:', error)

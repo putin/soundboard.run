@@ -33,7 +33,7 @@ async function getCategoryById(categoryId: string): Promise<(Category & { audio_
     .select('*')
     .eq('id', categoryId)
     .eq('is_active', true)
-    .single();
+    .single<Category>();
 
   if (error || !category) {
     return null;

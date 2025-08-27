@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { Database } from '@/lib/supabase/types'
 
 // Cloudflare R2 配置
 const R2_CONFIG = {
@@ -24,7 +25,7 @@ export async function GET(
       .select('*')
       .eq('id', audioId)
       .eq('is_active', true)
-      .single()
+      .single<Database['public']['Tables']['sound_audio_items']['Row']>()
 
     if (error || !audioItem) {
       return NextResponse.json(
@@ -44,7 +45,7 @@ export async function GET(
     // 更新下载统计
     if (action === 'download') {
       try {
-        await supabase.rpc('increment_counter', {
+        await (supabase.rpc as any)('increment_counter', {
           table_name: 'sound_audio_items',
           row_id: audioId,
           column_name: 'download_count'
@@ -162,7 +163,7 @@ export async function HEAD(
       .select('mp3_url, file_size')
       .eq('id', audioId)
       .eq('is_active', true)
-      .single()
+      .single<Pick<Database['public']['Tables']['sound_audio_items']['Row'], 'mp3_url' | 'file_size'>>()
 
     if (error || !audioItem) {
       return new NextResponse(null, { status: 404 })

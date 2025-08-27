@@ -152,9 +152,42 @@ export interface Database {
           tag_id?: string
         }
       }
+      sound_play_history: {
+        Row: {
+          id: string
+          audio_id: string
+          ip_address: string
+          user_agent: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          audio_id: string
+          ip_address: string
+          user_agent: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          audio_id?: string
+          ip_address?: string
+          user_agent?: string
+          created_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
+    }
+    Functions: {
+      increment_counter: {
+        Args: [{
+          table_name: string
+          row_id: string
+          column_name: string
+        }]
+        Returns: any
+      }
     }
   }
 }
