@@ -1,0 +1,42 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "@supabase_url",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase_anon_key",
+    "DATABASE_URL": "@database_url",
+    "R2_ACCOUNT_ID": "@r2_account_id", 
+    "R2_ACCESS_KEY_ID": "@r2_access_key",
+    "R2_SECRET_ACCESS_KEY": "@r2_secret_key",
+    "R2_BUCKET_NAME": "@r2_bucket_name",
+    "R2_PUBLIC_URL": "@r2_public_url",
+    "NEXT_PUBLIC_SITE_URL": "@site_url",
+    "NEXT_PUBLIC_GA_ID": "@ga_id"
+  },
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=60, stale-while-revalidate=300"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/sound-board",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
+}
