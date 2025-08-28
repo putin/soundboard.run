@@ -10,8 +10,7 @@
     "lint": "next lint",
     "sitemap": "npm run clean-sitemap && next-sitemap",
     "migrate": "tsx scripts/migrate-data.ts",
-    "db:types": "supabase gen types typescript --project-id YOUR_PROJECT_ID > lib/supabase/types.ts",
-    "update-r2-urls": "tsx scripts/update-r2-urls.ts"
+    "db:types": "supabase gen types typescript --project-id YOUR_PROJECT_ID > lib/supabase/types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
