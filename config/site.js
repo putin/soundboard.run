@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "SoundBoard.run",
   description: "Free sound buttons and soundboards with hilarious audio clips. Download MP3 sound effects, meme sounds, and viral audio for free!",
-  domain: "soundboard.run",
-  url: "https://soundboard.run",
+  domain: "r2.soundboard.run",
+  url: "https://r2.soundboard.run",
   email: "soundboard@gmail.com",
   author: "SoundBoard.run",
   social: {

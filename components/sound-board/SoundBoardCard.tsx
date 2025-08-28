@@ -36,8 +36,9 @@ export function SoundBoardCard({ id, title, description, mp3Url, category, tags,
       if (!audioRef.current) {
         setIsLoading(true);
         
-        // 直接使用原始 URL
-        const audio = new Audio(mp3Url);
+        // 使用API代理URL进行播放，避免CORS问题
+        const proxyUrl = `/api/audio/${id}/download?action=stream`;
+        const audio = new Audio(proxyUrl);
         audioRef.current = audio;
 
         audio.addEventListener('loadstart', () => {
