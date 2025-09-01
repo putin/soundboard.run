@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { Database } from '@/lib/supabase/types'
+import { withCors, handleOptions } from '@/lib/cors'
+
+export async function OPTIONS() {
+  return handleOptions()
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error('Error fetching categories:', error)
-      return NextResponse.json(
+      return withCors(
         { error: 'Failed to fetch categories' },
         { status: 500 }
       )
@@ -44,20 +49,20 @@ export async function GET(request: NextRequest) {
         })
       )
 
-      return NextResponse.json({
+      return withCors({
         categories: categoriesWithCount,
         total: categories.length
       })
     }
 
-    return NextResponse.json({
+    return withCors({
       categories,
       total: categories.length
     })
 
   } catch (error) {
     console.error('Unexpected error:', error)
-    return NextResponse.json(
+    return withCors(
       { error: 'Internal server error' },
       { status: 500 }
     )
