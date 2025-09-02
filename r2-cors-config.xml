@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <CORSRule>
+        <AllowedMethod>GET</AllowedMethod>
+        <AllowedMethod>HEAD</AllowedMethod>
+        <AllowedMethod>OPTIONS</AllowedMethod>
+        <AllowedOrigin>https://soundboard.run</AllowedOrigin>
+        <AllowedOrigin>https://*.vercel.app</AllowedOrigin>
+        <AllowedOrigin>*</AllowedOrigin>
+        <AllowedHeader>*</AllowedHeader>
+        <ExposeHeader>ETag</ExposeHeader>
+        <ExposeHeader>Content-Range</ExposeHeader>
+        <ExposeHeader>Accept-Ranges</ExposeHeader>
+        <ExposeHeader>Content-Length</ExposeHeader>
+        <MaxAgeSeconds>3000</MaxAgeSeconds>
+    </CORSRule>
+</CORSConfiguration>
