@@ -1,6 +1,12 @@
-import React from 'react';
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+
+export const metadata: Metadata = {
+  title: `Terms of Service | ${siteConfig.name}`,
+  description: "Terms of Service for SoundBoard.run - Read our terms and conditions for using our sound effects and meme soundboard service.",
+};
 
 const TermsOfService = () => {
   return (
@@ -9,94 +15,102 @@ const TermsOfService = () => {
 
       <main className="container mx-auto">
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <h2 className="text-3xl text-center font-bold mb-6">Terms of Service</h2>
+          <div className="prose prose-lg max-w-none dark:prose-invert">
+            <h1 className="text-4xl font-bold text-center mb-8 text-gray-900 dark:text-white">Terms of Service</h1>
+            
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-8">
+              <strong>Last updated:</strong> September 2, 2025
+            </p>
 
-          <div className="space-y-6">
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">1. Acceptance of Terms</h2>
-              <p>
-                By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
-              </p>
-            </section>
+            <p className="mb-8">
+              Welcome to soundboard.run ("Website", "Service", "we", "our", or "us"). By accessing or using this Website, you agree to be bound by these Terms of Service ("Terms"). If you do not agree, please do not use our Website.
+            </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">2. Use License</h2>
-              <p className="mb-4">
-                Permission is granted to temporarily access the games and materials (information or software) on our website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
-              </p>
-              <ul className="list-disc pl-6 mb-4">
-                <li>Modify or copy the materials</li>
-                <li>Use the materials for any commercial purpose</li>
-                <li>Attempt to decompile or reverse engineer any software contained on the website</li>
-                <li>Remove any copyright or other proprietary notations from the materials</li>
-                <li>Transfer the materials to another person or "mirror" the materials on any other server</li>
-              </ul>
-            </section>
+            <h2 className="text-3xl font-bold mt-12 mb-6 text-gray-900 dark:text-white">1. Use of Service</h2>
+            <p className="mb-4">
+              Our Website provides free access to soundboards, including meme soundboards and other types in the future.
+            </p>
+            <p className="mb-4">
+              The Service is provided for personal, non-commercial use only, unless you have obtained prior written consent from us.
+            </p>
+            <p className="mb-4">You agree not to misuse the Service, including but not limited to:</p>
+            <ul className="list-disc pl-6 mb-6 space-y-2">
+              <li>Attempting to hack, disrupt, or overload our servers.</li>
+              <li>Using automated tools (bots, crawlers, scrapers) to excessively download content.</li>
+              <li>Uploading or sharing harmful, illegal, or infringing content.</li>
+            </ul>
 
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">3. User Conduct</h2>
-              <p className="mb-4">You agree not to:</p>
-              <ul className="list-disc pl-6 mt-2">
-                <li>Use any device, software, or routine that interferes with the proper working of the Service</li>
-                <li>Introduce any viruses, trojans, worms, logic bombs, or other harmful material</li>
-                <li>Attempt to gain unauthorized access to any portion of the Service</li>
-                <li>Use the Service for any unlawful purpose</li>
-                <li>Harass, abuse, or harm another person</li>
-                <li>Use another user's account without permission</li>
-              </ul>
-            </section>
+            <h2 className="text-3xl font-bold mt-12 mb-6 text-gray-900 dark:text-white">2. Intellectual Property</h2>
+            <p className="mb-4">
+              All soundboards, audio files, website design, and related content are protected by copyright, trademark, and other intellectual property laws.
+            </p>
+            <p className="mb-4">
+              Some audio content may be user-contributed or sourced from public domains. We do not claim ownership over third-party content, but we provide access for fair use, parody, or educational purposes.
+            </p>
+            <p className="mb-6">
+              You may download and use sound files for personal entertainment. Redistribution, resale, or commercial use without permission is prohibited.
+            </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">4. Disclaimer</h2>
-              <p>
-                The materials on our website are provided on an 'as is' basis. We make no warranties, expressed or implied, and hereby disclaim and negate all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
-              </p>
-            </section>
+            <h2 className="text-3xl font-bold mt-12 mb-6 text-gray-900 dark:text-white">3. User Responsibilities</h2>
+            <p className="mb-4">
+              You are responsible for ensuring that your use of our Website complies with your local laws and regulations.
+            </p>
+            <p className="mb-4">
+              You agree not to use the Website for any unlawful, offensive, or harmful purposes.
+            </p>
+            <p className="mb-6">
+              If you submit or suggest content, you grant us a non-exclusive, royalty-free license to use, display, and distribute that content on the Website.
+            </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">5. Limitations</h2>
-              <p>
-                In no event shall we or our suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on our website, even if we or an authorized representative has been notified orally or in writing of the possibility of such damage.
-              </p>
-            </section>
+            <h2 className="text-3xl font-bold mt-12 mb-6 text-gray-900 dark:text-white">4. Disclaimer of Warranties</h2>
+            <p className="mb-4">
+              The Service is provided "as is" and "as available", without warranties of any kind.
+            </p>
+            <p className="mb-4">
+              We do not guarantee that the Website will always be available, error-free, secure, or free of harmful components.
+            </p>
+            <p className="mb-6">
+              Soundboard.run is not responsible for how you use the downloaded sound files.
+            </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">6. Accuracy of Materials</h2>
-              <p>
-                The materials appearing on our website could include technical, typographical, or photographic errors. We do not warrant that any of the materials on our website are accurate, complete, or current. We may make changes to the materials contained on our website at any time without notice.
-              </p>
-            </section>
+            <h2 className="text-3xl font-bold mt-12 mb-6 text-gray-900 dark:text-white">5. Limitation of Liability</h2>
+            <p className="mb-4">
+              To the fullest extent permitted by law, we are not liable for any damages (direct, indirect, incidental, consequential, or special) arising from your use of the Service.
+            </p>
+            <p className="mb-6">
+              You use the Website at your own risk.
+            </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">7. Links</h2>
-              <p>
-                We have not reviewed all of the sites linked to our website and are not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by us of the site. Use of any such linked website is at the user's own risk.
-              </p>
-            </section>
+            <h2 className="text-3xl font-bold mt-12 mb-6 text-gray-900 dark:text-white">6. Third-Party Links</h2>
+            <p className="mb-6">
+              Our Website may contain links to third-party websites or resources. We are not responsible for the availability, content, or practices of those external sites.
+            </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">8. Modifications</h2>
-              <p>
-                We may revise these terms of service for our website at any time without notice. By using this website, you are agreeing to be bound by the then current version of these terms of service.
-              </p>
-            </section>
+            <h2 className="text-3xl font-bold mt-12 mb-6 text-gray-900 dark:text-white">7. Termination</h2>
+            <p className="mb-6">
+              We reserve the right to suspend or terminate your access to the Service at any time, with or without notice, if you violate these Terms.
+            </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">9. Governing Law</h2>
-              <p>
-                These terms and conditions are governed by and construed in accordance with the laws and you irrevocably submit to the exclusive jurisdiction of the courts in that location.
-              </p>
-            </section>
+            <h2 className="text-3xl font-bold mt-12 mb-6 text-gray-900 dark:text-white">8. Changes to Terms</h2>
+            <p className="mb-4">
+              We may update these Terms from time to time. Changes will be effective when posted on this page.
+            </p>
+            <p className="mb-6">
+              Continued use of the Website after changes means you accept the updated Terms.
+            </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold mb-3">10. Contact Us</h2>
-              <p>
-                If you have any questions about these Terms of Service, please contact us:
-              </p>
-              <p className="mt-2">
-                By email: support@crazy-cattle.net
-              </p>
-            </section>
+            <h2 className="text-3xl font-bold mt-12 mb-6 text-gray-900 dark:text-white">9. Governing Law</h2>
+            <p className="mb-6">
+              These Terms shall be governed by and construed in accordance with the laws of Singapore, without regard to its conflict of law principles.
+            </p>
+
+            <h2 className="text-3xl font-bold mt-12 mb-6 text-gray-900 dark:text-white">10. Contact Us</h2>
+            <p className="mb-4">
+              If you have any questions about these Terms, you may contact us at:
+            </p>
+            <p className="mb-8">
+              📧 <a href="mailto:soundboardrun@gmail.com" className="text-blue-600 hover:underline">soundboardrun@gmail.com</a>
+            </p>
           </div>
         </div>
       </main>
@@ -107,8 +121,3 @@ const TermsOfService = () => {
 };
 
 export default TermsOfService;
-
-
-
-
-
