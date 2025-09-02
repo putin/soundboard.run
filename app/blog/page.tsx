@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
+import { Header } from "@/components/layout/Header";
 
 export const metadata: Metadata = {
   title: `Blog | ${siteConfig.name}`,
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <main className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-foreground mb-4">
@@ -21,47 +23,38 @@ export default function BlogPage() {
         
         <div className="max-w-4xl mx-auto">
           <div className="space-y-8">
-            {/* Blog Post 1 */}
-            <article className="border rounded-lg p-6 hover:shadow-md transition-shadow">
-              <h2 className="text-2xl font-semibold text-foreground mb-3">
-                New Trending Sounds Added This Week
-              </h2>
-              <p className="text-muted-foreground mb-4">
-                Discover the latest viral audio clips and meme sounds that are taking the internet by storm. 
-                From TikTok trends to classic internet humor, we've got you covered.
-              </p>
-              <div className="text-sm text-muted-foreground">
-                Published: January 15, 2025
+            {/* Featured Blog Post */}
+            <article className="border-2 border-primary/20 rounded-lg p-6 hover:shadow-lg transition-shadow bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
+              <div className="flex items-start justify-between mb-3">
+                <div className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                  Featured
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  January 18, 2025
+                </div>
               </div>
+              <a href="/blog/meme-soundboard-best-free-meme-sounds" className="block hover:text-primary transition-colors">
+                <h2 className="text-2xl font-semibold text-foreground mb-3">
+                  Meme Soundboard: The Best Free Meme Sounds Online
+                </h2>
+                <p className="text-muted-foreground mb-4">
+                  Discover the ultimate collection of viral audio clips that everyone recognizes. From the legendary "Bruh" to the dramatic Vine Boom, learn why meme soundboards are the perfect tool for gaming, streaming, and content creation.
+                </p>
+                <div className="inline-flex items-center text-primary font-medium">
+                  Read more →
+                </div>
+              </a>
             </article>
 
-            {/* Blog Post 2 */}
-            <article className="border rounded-lg p-6 hover:shadow-md transition-shadow">
-              <h2 className="text-2xl font-semibold text-foreground mb-3">
-                How to Use Sound Effects in Content Creation
-              </h2>
-              <p className="text-muted-foreground mb-4">
-                Learn the best practices for incorporating sound effects into your videos, podcasts, 
-                and other creative projects. Tips and tricks from professional content creators.
+            {/* 暂时没有其他文章 */}
+            <div className="text-center py-12">
+              <h3 className="text-xl font-semibold text-muted-foreground mb-2">
+                More articles coming soon!
+              </h3>
+              <p className="text-muted-foreground">
+                We're working on more exciting content about sound effects and audio trends.
               </p>
-              <div className="text-sm text-muted-foreground">
-                Published: January 10, 2025
-              </div>
-            </article>
-
-            {/* Blog Post 3 */}
-            <article className="border rounded-lg p-6 hover:shadow-md transition-shadow">
-              <h2 className="text-2xl font-semibold text-foreground mb-3">
-                The History of Meme Sounds
-              </h2>
-              <p className="text-muted-foreground mb-4">
-                Explore the fascinating evolution of internet meme sounds, from early viral clips 
-                to modern audio trends. How these sounds shape internet culture.
-              </p>
-              <div className="text-sm text-muted-foreground">
-                Published: January 5, 2025
-              </div>
-            </article>
+            </div>
           </div>
         </div>
       </main>
