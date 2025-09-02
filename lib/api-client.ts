@@ -4,7 +4,8 @@
 
 import { AudioItemWithCategory, Category } from './supabase/types'
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+// 使用空字符串，让请求使用相对路径
+const BASE_URL = ''
 
 // API 响应类型定义
 export interface ApiResponse<T> {
