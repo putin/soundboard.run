@@ -70,6 +70,8 @@ export async function GET(
         const r2Response = await fetch(downloadUrl, {
           headers: {
             'Range': request.headers.get('Range') || '',
+            'Origin': 'https://soundboard.run',
+            'User-Agent': 'Mozilla/5.0 (compatible; SoundBoard/1.0)',
           }
         })
 
@@ -112,7 +114,8 @@ export async function GET(
       try {
         const response = await fetch(downloadUrl, {
           headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Origin': 'https://soundboard.run',
           }
         })
         
