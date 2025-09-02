@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { Database } from '@/lib/supabase/types'
+import { withCors, handleOptions } from '@/lib/cors'
 
 export async function GET(request: NextRequest) {
   try {

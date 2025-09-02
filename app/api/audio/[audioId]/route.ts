@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { Database } from '@/lib/supabase/types'
+import { withCors, handleOptions } from '@/lib/cors'
+
+export async function OPTIONS() {
+  return handleOptions()
+}
 
 export async function GET(
   request: NextRequest,
@@ -18,7 +23,7 @@ export async function GET(
       .single<Database['public']['Tables']['sound_audio_items']['Row']>()
 
     if (error || !rawAudioItem) {
-      return NextResponse.json(
+      return withCors(
         { error: 'Audio item not found' },
         { status: 404 }
       )
@@ -41,11 +46,11 @@ export async function GET(
       tags: [] // 基础表结构暂时返回空数组
     }
 
-    return NextResponse.json({ audio_item: audioItem })
+    return withCors({ audio_item: audioItem })
 
   } catch (error) {
     console.error('Unexpected error:', error)
-    return NextResponse.json(
+    return withCors(
       { error: 'Internal server error' },
       { status: 500 }
     )
@@ -75,7 +80,7 @@ export async function POST(
         updateField = 'like_count'
         break
       default:
-        return NextResponse.json(
+        return withCors(
           { error: 'Invalid action' },
           { status: 400 }
         )
@@ -90,7 +95,7 @@ export async function POST(
 
     if (error) {
       console.error('Error updating counter:', error)
-      return NextResponse.json(
+      return withCors(
         { error: 'Failed to update counter' },
         { status: 500 }
       )
@@ -112,11 +117,11 @@ export async function POST(
         })
     }
 
-    return NextResponse.json({ success: true })
+    return withCors({ success: true })
 
   } catch (error) {
     console.error('Unexpected error:', error)
-    return NextResponse.json(
+    return withCors(
       { error: 'Internal server error' },
       { status: 500 }
     )

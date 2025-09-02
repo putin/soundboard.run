@@ -16,9 +16,11 @@
         {
           "key": "Cache-Control",
           "value": "s-maxage=60, stale-while-revalidate=300"
-        },{ "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
+        },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, Range" },
+        { "key": "Access-Control-Expose-Headers", "value": "Content-Range, Accept-Ranges, Content-Length" }
       ]
     }
   ],

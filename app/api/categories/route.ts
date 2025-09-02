@@ -21,7 +21,6 @@ export async function GET(request: NextRequest) {
       .order('sort_order', { ascending: true })
 
     const { data: categories, error } = await query.returns<Database['public']['Tables']['sound_categories']['Row'][]>()
-
     if (error) {
       console.error('Error fetching categories:', error)
       return withCors(

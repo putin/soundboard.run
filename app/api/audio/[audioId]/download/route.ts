@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { Database } from '@/lib/supabase/types'
+import { corsHeaders, handleOptions } from '@/lib/cors'
+
+export async function OPTIONS() {
+  return handleOptions()
+}
 
 // Cloudflare R2 配置
 const R2_CONFIG = {
@@ -30,7 +35,10 @@ export async function GET(
     if (error || !audioItem) {
       return NextResponse.json(
         { error: 'Audio item not found' },
-        { status: 404 }
+        { 
+          status: 404,
+          headers: corsHeaders()
+        }
       )
     }
 
@@ -69,8 +77,15 @@ export async function GET(
           throw new Error(`R2 response error: ${r2Response.status}`)
         }
 
-        // 复制响应头
+        // 复制响应头并添加 CORS
         const headers = new Headers()
+        
+        // 添加 CORS 头
+        Object.entries(corsHeaders()).forEach(([key, value]) => {
+          headers.set(key, value)
+        })
+        
+        // 添加音频相关头
         headers.set('Content-Type', r2Response.headers.get('Content-Type') || 'audio/mpeg')
         headers.set('Content-Length', r2Response.headers.get('Content-Length') || '0')
         headers.set('Accept-Ranges', 'bytes')
@@ -105,8 +120,14 @@ export async function GET(
           throw new Error(`Original URL response error: ${response.status}`)
         }
 
-        // 设置强制下载的响应头
+        // 设置强制下载的响应头并添加 CORS
         const headers = new Headers()
+        
+        // 添加 CORS 头
+        Object.entries(corsHeaders()).forEach(([key, value]) => {
+          headers.set(key, value)
+        })
+        
         headers.set('Content-Type', 'application/octet-stream')
         
         // 清理文件名
@@ -119,7 +140,6 @@ export async function GET(
         }
         
         headers.set('Cache-Control', 'no-cache')
-        headers.set('Access-Control-Allow-Origin', '*')
 
         return new NextResponse(response.body, {
           status: 200,
@@ -138,13 +158,18 @@ export async function GET(
       audio_item: audioItem,
       download_url: downloadUrl,
       stream_url: `/api/audio/${audioId}/download?action=stream`
+    }, {
+      headers: corsHeaders()
     })
 
   } catch (error) {
     console.error('Unexpected error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { 
+        status: 500,
+        headers: corsHeaders()
+      }
     )
   }
 }
@@ -166,18 +191,28 @@ export async function HEAD(
       .single<Pick<Database['public']['Tables']['sound_audio_items']['Row'], 'mp3_url' | 'file_size'>>()
 
     if (error || !audioItem) {
-      return new NextResponse(null, { status: 404 })
+      return new NextResponse(null, { 
+        status: 404,
+        headers: corsHeaders()
+      })
     }
+
+    const headers = new Headers()
+    Object.entries(corsHeaders()).forEach(([key, value]) => {
+      headers.set(key, value)
+    })
+    headers.set('Content-Type', 'audio/mpeg')
+    headers.set('Content-Length', String(audioItem.file_size || 0))
 
     return new NextResponse(null, {
       status: 200,
-      headers: {
-        'Content-Type': 'audio/mpeg',
-        'Content-Length': String(audioItem.file_size || 0),
-      }
+      headers
     })
   } catch (error) {
     console.error('Error in HEAD request:', error)
-    return new NextResponse(null, { status: 500 })
+    return new NextResponse(null, { 
+      status: 500,
+      headers: corsHeaders()
+    })
   }
 }

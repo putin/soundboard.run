@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { Database } from '@/lib/supabase/types'
+import { withCors, handleOptions } from '@/lib/cors'
+
+export async function OPTIONS() {
+  return handleOptions()
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -66,7 +71,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error('Error fetching audio items:', error)
-      return NextResponse.json(
+      return withCors(
         { error: 'Failed to fetch audio items' },
         { status: 500 }
       )
@@ -81,7 +86,7 @@ export async function GET(request: NextRequest) {
 
     if (categoriesError) {
       console.error('Error fetching categories:', categoriesError)
-      return NextResponse.json(
+      return withCors(
         { error: 'Failed to fetch categories' },
         { status: 500 }
       )
@@ -123,7 +128,7 @@ export async function GET(request: NextRequest) {
 
     const totalPages = Math.ceil((totalCount || 0) / limit)
 
-    return NextResponse.json({
+    return withCors({
       audio_items: audioItems || [],
       pagination: {
         page,
@@ -144,7 +149,7 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('Unexpected error:', error)
-    return NextResponse.json(
+    return withCors(
       { error: 'Internal server error' },
       { status: 500 }
     )
