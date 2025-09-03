@@ -142,7 +142,7 @@ export async function generateStaticParams() {
     .order('sort_order');
 
   return categories?.map((category) => ({
-    categoryId: category.id,
+    categoryId: category.id.toString(),
   })) || [];
 }
 
