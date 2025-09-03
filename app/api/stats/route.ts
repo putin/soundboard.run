@@ -10,8 +10,6 @@ export async function GET(request: NextRequest) {
     const [
       { count: totalAudioItems },
       { count: totalCategories },
-      { count: totalTags },
-      { data: popularTags },
       { data: featuredAudio },
       { data: topAudio }
     ] = await Promise.all([
@@ -27,47 +25,31 @@ export async function GET(request: NextRequest) {
         .select('*', { count: 'exact', head: true })
         .eq('is_active', true),
       
-      // 总标签数
-      supabase
-        .from('sound_tags')
-        .select('*', { count: 'exact', head: true }),
-      
-      // 热门标签
-      supabase
-        .from('sound_tags')
-        .select('name, usage_count')
-        .order('usage_count', { ascending: false })
-        .limit(10)
-        .returns<Pick<Database['public']['Tables']['sound_tags']['Row'], 'name' | 'usage_count'>[]>(),
-      
       // 精选音频
       supabase
-        .from('sound_audio_items_with_category')
-        .select('id, title, category_name, play_count')
+        .from('sound_audio_items')
+        .select(`
+          id, 
+          title, 
+          sound_audio_items_stat(play_count)
+        `)
         .eq('is_featured', true)
         .eq('is_active', true)
-        .order('play_count', { ascending: false })
-        .limit(5)
-        .returns<any[]>(),
+        .limit(5),
       
       // 最受欢迎音频
       supabase
-        .from('sound_audio_items_with_category')
-        .select('id, title, category_name, play_count')
+        .from('sound_audio_items')
+        .select(`
+          id, 
+          title, 
+          sound_audio_items_stat(play_count)
+        `)
         .eq('is_active', true)
-        .order('play_count', { ascending: false })
         .limit(10)
-        .returns<any[]>()
     ])
 
-    // 计算过去7天的统计
-    const sevenDaysAgo = new Date()
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-
-    const { count: recentPlays } = await supabase
-      .from('sound_play_history')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', sevenDaysAgo.toISOString())
+    // 播放历史统计已移除
 
     // 按分类统计
     const { data: categoryStats } = await supabase
@@ -85,10 +67,10 @@ export async function GET(request: NextRequest) {
       overview: {
         total_audio_items: totalAudioItems || 0,
         total_categories: totalCategories || 0,
-        total_tags: totalTags || 0,
-        recent_plays: recentPlays || 0
+        total_tags: 0, // 标签功能已移除
+        recent_plays: 0 // 播放历史功能已移除
       },
-      popular_tags: popularTags || [],
+      popular_tags: [], // 标签功能已移除
       featured_audio: featuredAudio || [],
       top_audio: topAudio || [],
       category_stats: categoryStats || [],

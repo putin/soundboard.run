@@ -69,7 +69,10 @@ export function SoundBoardList({ onSoundBoardSelect, selectedCategory, searchQue
   // 处理播放音频
   const handlePlay = async (audioId: string) => {
     try {
-      await audioApi.updateStats(audioId, 'play');
+      const audioIdNum = parseInt(audioId, 10);
+      if (!isNaN(audioIdNum)) {
+        await audioApi.updateStats(audioIdNum, 'play');
+      }
       onSoundBoardSelect(audioId);
     } catch (err) {
       console.error('Error updating play stats:', err);
@@ -142,9 +145,9 @@ export function SoundBoardList({ onSoundBoardSelect, selectedCategory, searchQue
             title={audioItem.title}
             description={audioItem.description || ''}
             mp3Url={audioItem.mp3_url}
-            category={audioItem.category_id}
+            category={audioItem.category_name || 'Unknown'}
             tags={audioItem.tags || []}
-            onPlay={() => handlePlay(audioItem.id)}
+            onPlay={() => handlePlay(audioItem.id.toString())}
           />
         ))}
       </div>

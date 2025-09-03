@@ -11,7 +11,7 @@ import { useState } from "react";
 import { SoundBoardList } from "@/components/sound-board/SoundBoardList";
 
 interface CategoryAudioListProps {
-  categoryId: string;
+  categoryId: number;
 }
 
 export function CategoryAudioList({ categoryId }: CategoryAudioListProps) {
@@ -26,7 +26,7 @@ export function CategoryAudioList({ categoryId }: CategoryAudioListProps) {
   return (
     <SoundBoardList
       onSoundBoardSelect={handleAudioSelect}
-      selectedCategory={categoryId}
+      selectedCategory={categoryId.toString()}
     />
   );
 }

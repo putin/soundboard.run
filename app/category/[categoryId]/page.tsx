@@ -28,10 +28,15 @@ interface CategoryPageProps {
 async function getCategoryById(categoryId: string): Promise<(Category & { audio_count: number }) | null> {
   const supabase = createClient();
   
+  const categoryIdNum = parseInt(categoryId, 10);
+  if (isNaN(categoryIdNum)) {
+    return null;
+  }
+  
   const { data: category, error } = await supabase
     .from('sound_categories')
     .select('*')
-    .eq('id', categoryId)
+    .eq('id', categoryIdNum)
     .eq('is_active', true)
     .single<Category>();
 
@@ -43,7 +48,7 @@ async function getCategoryById(categoryId: string): Promise<(Category & { audio_
   const { count } = await supabase
     .from('sound_audio_items')
     .select('*', { count: 'exact', head: true })
-    .eq('category_id', categoryId)
+    .eq('category_id', categoryIdNum)
     .eq('is_active', true);
 
   return {
@@ -64,7 +69,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   }
 
   const title = `${category.name} Sound Effects (${category.audio_count} sounds) - ${siteConfig.name}`;
-  const description = `${category.description} Browse ${category.audio_count} high-quality ${category.name.toLowerCase()} sound effects. Free download, instant play.`;
+  const description = `Browse ${category.audio_count} high-quality ${category.name.toLowerCase()} sound effects. Free download, instant play.`;
 
   return {
     title,
@@ -171,7 +176,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             {category.name} Sound Effects
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            {category.description}
+            Explore our collection of {category.name.toLowerCase()} sound effects
           </p>
           <div className="mt-4">
             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
@@ -191,7 +196,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         
         {/* 音频列表 */}
         <Suspense fallback={<LoadingIndicator />}>
-          <CategoryAudioList categoryId={params.categoryId} />
+          <CategoryAudioList categoryId={parseInt(params.categoryId, 10)} />
         </Suspense>
       </main>
       

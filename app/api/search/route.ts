@@ -69,9 +69,9 @@ export async function GET(request: NextRequest) {
       // 获取分类信息用于降级搜索
       const { data: categories } = await supabase
         .from('sound_categories')
-        .select('id, name, description, color')
+        .select('id, name, color')
         .eq('is_active', true)
-        .returns<Pick<Database['public']['Tables']['sound_categories']['Row'], 'id' | 'name' | 'description' | 'color'>[]>()
+        .returns<Pick<Database['public']['Tables']['sound_categories']['Row'], 'id' | 'name' | 'color'>[]>()
 
       const categoryMap = new Map()
       categories?.forEach(cat => categoryMap.set(cat.id, cat))
@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
         return {
           ...item,
           category_name: category?.name || null,
-          category_description: category?.description || null,
+          category_description: null, // description列不存在
           category_color: category?.color || null,
           tags: []
         }
@@ -100,9 +100,9 @@ export async function GET(request: NextRequest) {
     // 获取分类信息
     const { data: categories } = await supabase
       .from('sound_categories')
-      .select('id, name, description, color')
+      .select('id, name, color')
       .eq('is_active', true)
-      .returns<Pick<Database['public']['Tables']['sound_categories']['Row'], 'id' | 'name' | 'description' | 'color'>[]>()
+      .returns<Pick<Database['public']['Tables']['sound_categories']['Row'], 'id' | 'name' | 'color'>[]>()
 
     const categoryMap = new Map()
     categories?.forEach(cat => categoryMap.set(cat.id, cat))
@@ -119,18 +119,9 @@ export async function GET(request: NextRequest) {
       }
     }) || []
 
-    // 搜索建议 (基于标签)
-    const { data: suggestions } = await supabase
-      .from('sound_tags')
-      .select('name')
-      .ilike('name', `%${query}%`)
-      .order('usage_count', { ascending: false })
-      .limit(5)
-      .returns<Pick<Database['public']['Tables']['sound_tags']['Row'], 'name'>[]>()
-
     return NextResponse.json({
       results: audioItems,
-      suggestions: suggestions?.map(s => s.name) || [],
+      suggestions: [], // 标签功能已移除
       query,
       page,
       limit,

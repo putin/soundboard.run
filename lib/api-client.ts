@@ -83,7 +83,7 @@ export const categoriesApi = {
   },
 
   // 获取单个分类
-  getById: async (categoryId: string): Promise<{ category: Category & { audio_count: number } }> => {
+  getById: async (categoryId: number): Promise<{ category: Category & { audio_count: number } }> => {
     return apiCall<{ category: Category & { audio_count: number } }>(`/categories/${categoryId}`)
   },
 }
@@ -112,12 +112,12 @@ export const audioApi = {
   },
 
   // 获取单个音频
-  getById: async (audioId: string): Promise<{ audio_item: AudioItemWithCategory }> => {
+  getById: async (audioId: number): Promise<{ audio_item: AudioItemWithCategory }> => {
     return apiCall<{ audio_item: AudioItemWithCategory }>(`/audio/${audioId}`)
   },
 
   // 更新播放统计
-  updateStats: async (audioId: string, action: 'play' | 'download' | 'like'): Promise<{ success: boolean }> => {
+  updateStats: async (audioId: number, action: 'play' | 'download' | 'like'): Promise<{ success: boolean }> => {
     return apiCall<{ success: boolean }>(`/audio/${audioId}`, {
       method: 'POST',
       body: JSON.stringify({ action }),
@@ -125,17 +125,17 @@ export const audioApi = {
   },
 
   // 获取音频流 URL (用于播放)
-  getStreamUrl: (audioId: string): string => {
+  getStreamUrl: (audioId: number): string => {
     return `${BASE_URL}/api/audio/${audioId}/download?action=stream`
   },
 
   // 获取音频下载 URL
-  getDownloadUrl: (audioId: string): string => {
+  getDownloadUrl: (audioId: number): string => {
     return `${BASE_URL}/api/audio/${audioId}/download?action=download`
   },
 
   // 获取音频下载信息
-  getDownloadInfo: async (audioId: string): Promise<{
+  getDownloadInfo: async (audioId: number): Promise<{
     audio_item: AudioItemWithCategory
     download_url: string
     stream_url: string

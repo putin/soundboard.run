@@ -8,7 +8,14 @@ export async function GET(
 ) {
   try {
     const supabase = createClient()
-    const categoryId = params.categoryId
+    const categoryId = parseInt(params.categoryId, 10)
+    
+    if (isNaN(categoryId)) {
+      return NextResponse.json(
+        { error: 'Invalid category ID' },
+        { status: 400 }
+      )
+    }
 
     const { data: category, error } = await supabase
       .from('sound_categories')

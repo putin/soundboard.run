@@ -22,7 +22,17 @@ export async function GET(
 ) {
   try {
     const supabase = createClient()
-    const audioId = params.audioId
+    const audioId = parseInt(params.audioId, 10)
+    
+    if (isNaN(audioId)) {
+      return NextResponse.json(
+        { error: 'Invalid audio ID' },
+        { 
+          status: 400,
+          headers: corsHeaders()
+        }
+      )
+    }
 
     // 获取音频信息
     const { data: audioItem, error } = await supabase
@@ -53,10 +63,9 @@ export async function GET(
     // 更新下载统计
     if (action === 'download') {
       try {
-        await (supabase.rpc as any)('increment_counter', {
-          table_name: 'sound_audio_items',
-          row_id: audioId,
-          column_name: 'download_count'
+        await (supabase.rpc as any)('increment_audio_counter', {
+          p_audio_id: audioId,
+          counter_type: 'download_count'
         })
       } catch (statsError) {
         console.error('Error updating download stats:', statsError)
@@ -184,7 +193,14 @@ export async function HEAD(
 ) {
   try {
     const supabase = createClient()
-    const audioId = params.audioId
+    const audioId = parseInt(params.audioId, 10)
+    
+    if (isNaN(audioId)) {
+      return new NextResponse(null, { 
+        status: 400,
+        headers: corsHeaders()
+      })
+    }
 
     const { data: audioItem, error } = await supabase
       .from('sound_audio_items')

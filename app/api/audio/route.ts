@@ -24,14 +24,17 @@ export async function GET(request: NextRequest) {
     const sortBy = searchParams.get('sort') || 'created_at'
     const order = searchParams.get('order') === 'asc' ? 'asc' : 'desc'
 
-    // 构建查询 - 只查询音频表，包含总计数
+    // 构建查询 - 只查询音频表，统计数据稍后获取
     let query = supabase
       .from('sound_audio_items')
       .select('*', { count: 'exact' })
 
     // 应用筛选条件
     if (categoryId) {
-      query = query.eq('category_id', categoryId)
+      const categoryIdNum = parseInt(categoryId, 10)
+      if (!isNaN(categoryIdNum)) {
+        query = query.eq('category_id', categoryIdNum)
+      }
     }
 
     if (featured) {
@@ -59,8 +62,8 @@ export async function GET(request: NextRequest) {
     // 只显示活跃的音频
     query = query.eq('is_active', true)
 
-    // 排序
-    const validSortFields = ['created_at', 'play_count', 'download_count', 'like_count', 'title']
+    // 排序（仅限主表字段）
+    const validSortFields = ['created_at', 'title', 'updated_at']
     const sortField = validSortFields.includes(sortBy) ? sortBy : 'created_at'
     query = query.order(sortField, { ascending: order === 'asc' })
 
@@ -80,9 +83,9 @@ export async function GET(request: NextRequest) {
     // 获取所有分类信息
     const { data: categories, error: categoriesError } = await supabase
       .from('sound_categories')
-      .select('id, name, description, color')
+              .select('id, name, color')
       .eq('is_active', true)
-      .returns<Pick<Database['public']['Tables']['sound_categories']['Row'], 'id' | 'name' | 'description' | 'color'>[]>()
+      .returns<Pick<Database['public']['Tables']['sound_categories']['Row'], 'id' | 'name' | 'color'>[]>()
 
     if (categoriesError) {
       console.error('Error fetching categories:', categoriesError)
@@ -98,14 +101,34 @@ export async function GET(request: NextRequest) {
       categoryMap.set(cat.id, cat)
     })
 
+    // 获取统计数据
+    const audioIds = rawAudioItems?.map(item => item.id) || []
+    let statsMap = new Map()
+    
+    if (audioIds.length > 0) {
+      const { data: statsData } = await supabase
+        .from('sound_audio_items_stat')
+        .select('*')
+        .in('audio_id', audioIds)
+        .returns<Database['public']['Tables']['sound_audio_items_stat']['Row'][]>()
+      
+      statsData?.forEach(stat => {
+        statsMap.set(stat.audio_id, stat)
+      })
+    }
+
     // 合并数据
     const audioItems = rawAudioItems?.map(item => {
       const category = categoryMap.get(item.category_id)
+      const stats = statsMap.get(item.id)
       return {
         ...item,
         category_name: category?.name || null,
-        category_description: category?.description || null,
+        category_description: null, // description列不存在
         category_color: category?.color || null,
+        play_count: stats?.play_count || 0,
+        download_count: stats?.download_count || 0,
+        like_count: stats?.like_count || 0,
         tags: [] // 基础表结构暂时返回空数组
       }
     }) || []

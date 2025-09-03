@@ -17,8 +17,8 @@ import { categoriesApi } from "@/lib/api-client";
 import type { Category } from "@/lib/supabase/types";
 
 interface CategorySidebarProps {
-  selectedCategory: string | null;
-  onCategorySelect: (categoryId: string | null) => void;
+  selectedCategory: number | null;
+  onCategorySelect: (categoryId: number | null) => void;
 }
 
 export function CategorySidebar({ selectedCategory, onCategorySelect }: CategorySidebarProps) {

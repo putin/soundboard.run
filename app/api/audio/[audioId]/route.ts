@@ -13,7 +13,14 @@ export async function GET(
 ) {
   try {
     const supabase = createClient()
-    const audioId = params.audioId
+    const audioId = parseInt(params.audioId, 10)
+    
+    if (isNaN(audioId)) {
+      return withCors(
+        { error: 'Invalid audio ID' },
+        { status: 400 }
+      )
+    }
 
     const { data: rawAudioItem, error } = await supabase
       .from('sound_audio_items')
@@ -30,18 +37,23 @@ export async function GET(
     }
 
     // 获取分类信息
-    const { data: category, error: categoryError } = await supabase
-      .from('sound_categories')
-      .select('id, name, description, color')
-      .eq('id', rawAudioItem.category_id)
-      .eq('is_active', true)
-      .single<Pick<Database['public']['Tables']['sound_categories']['Row'], 'id' | 'name' | 'description' | 'color'>>()
+    let category = null
+    if (rawAudioItem.category_id) {
+      const { data: categoryData, error: categoryError } = await supabase
+        .from('sound_categories')
+        .select('id, name, color')
+        .eq('id', rawAudioItem.category_id)
+        .eq('is_active', true)
+        .single<Pick<Database['public']['Tables']['sound_categories']['Row'], 'id' | 'name' | 'color'>>()
+      
+      category = categoryData
+    }
 
     // 合并数据 (即使分类查询失败也返回音频数据)
     const audioItem = {
       ...rawAudioItem,
       category_name: category?.name || null,
-      category_description: category?.description || null,
+      category_description: null, // description列不存在
       category_color: category?.color || null,
       tags: [] // 基础表结构暂时返回空数组
     }
@@ -64,7 +76,14 @@ export async function POST(
 ) {
   try {
     const supabase = createClient()
-    const audioId = params.audioId
+    const audioId = parseInt(params.audioId, 10)
+    
+    if (isNaN(audioId)) {
+      return withCors(
+        { error: 'Invalid audio ID' },
+        { status: 400 }
+      )
+    }
     const body = await request.json()
     const action = body.action // 'play', 'download', 'like'
 
@@ -86,11 +105,10 @@ export async function POST(
         )
     }
 
-    // 使用 RPC 函数增加计数器 (需要在数据库中创建)
-    const { data, error } = await (supabase.rpc as any)('increment_counter', {
-      table_name: 'sound_audio_items',
-      row_id: audioId,
-      column_name: updateField
+    // 使用 RPC 函数增加音频统计计数器
+    const { data, error } = await (supabase.rpc as any)('increment_audio_counter', {
+      p_audio_id: audioId,
+      counter_type: updateField
     })
 
     if (error) {
@@ -101,21 +119,7 @@ export async function POST(
       )
     }
 
-    // 记录播放历史 (可选)
-    if (action === 'play') {
-      const userAgent = request.headers.get('user-agent') || ''
-      const ip = request.headers.get('x-forwarded-for') || 
-                 request.headers.get('x-real-ip') || 
-                 '127.0.0.1'
-
-      await (supabase as any)
-        .from('sound_play_history')
-        .insert({
-          audio_id: audioId,
-          ip_address: ip,
-          user_agent: userAgent
-        })
-    }
+    // 播放历史功能已移除
 
     return withCors({ success: true })
 

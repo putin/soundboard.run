@@ -42,7 +42,7 @@ export function HomeTemplate() {
   const [activeAudio, setActiveAudio] = useState<string | null>(null);
   
   // selectedCategory: 存储当前选中的分类ID，用于筛选显示
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
   /**
    * 处理搜索表单提交
@@ -113,7 +113,7 @@ export function HomeTemplate() {
             {/* 传递音频数据和选择回调 */}
             <SoundBoardList
               onSoundBoardSelect={setActiveAudio}        // 音频选择回调
-              selectedCategory={selectedCategory}  // 传递选中的分类
+              selectedCategory={selectedCategory?.toString() || null}  // 传递选中的分类
               searchQuery={searchQuery} // 传递搜索查询
             />
           </div>

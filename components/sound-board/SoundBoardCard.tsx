@@ -12,7 +12,7 @@ import { Download, Heart, Link, Share2, Play, Pause } from "lucide-react";
 import { audioApi } from "@/lib/api-client";
 
 interface SoundBoardCardProps {
-  id: string;
+  id: number;
   title: string;
   description: string;
   mp3Url: string;
